@@ -1,0 +1,26 @@
+﻿namespace Auth.Domain.Entities
+{
+    public class User
+    {
+        public Guid Id { get; private set; }
+
+        public string Username { get; private set; }
+
+        public string Email { get; private set; }
+
+        public string PasswordHash { get; private set; }
+
+        public ICollection<Role> Roles { get; private set; }
+
+        private User() { }
+
+        public User(string userName, string email, string password, IEnumerable<Role> roles)
+        {
+            Id = Guid.NewGuid();
+            Username = userName;
+            Email = email;
+            PasswordHash = password;
+            Roles = roles.ToList();
+        }
+    }
+}
