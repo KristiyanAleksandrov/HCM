@@ -29,6 +29,6 @@ namespace Auth.Infrastructure.Repositories
         }
 
         public async Task<User?> GetByUserNameAsync(string username, CancellationToken ct)
-        => await dbContext.Users.FirstOrDefaultAsync(u => u.Username == username, ct);
+        => await dbContext.Users.Include(x => x.Roles).FirstOrDefaultAsync(u => u.Username == username, ct);
     }
 }
