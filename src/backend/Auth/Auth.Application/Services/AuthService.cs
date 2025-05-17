@@ -1,10 +1,11 @@
-﻿using Auth.Application.RequestModels;
+﻿using Auth.Application.Interfaces;
+using Auth.Application.RequestModels;
 using Auth.Domain.Entities;
 using Auth.Infrastructure.Repositories;
 
 namespace Auth.Application.Services
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private readonly IUserRepository userRepository;
 

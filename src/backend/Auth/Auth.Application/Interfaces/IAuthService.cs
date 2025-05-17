@@ -1,6 +1,6 @@
 ﻿using Auth.Application.RequestModels;
 
-namespace Auth.Application.Services
+namespace Auth.Application.Interfaces
 {
     public interface IAuthService
     {
