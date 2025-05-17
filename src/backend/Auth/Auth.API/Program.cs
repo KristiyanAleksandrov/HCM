@@ -1,8 +1,10 @@
 using Auth.API.Infrastructure.ErrorHandling;
 using Auth.Application.Interfaces;
 using Auth.Application.Services;
+using Auth.Infrastructure.Data;
 using Auth.Infrastructure.Repositories;
 using Auth.Infrastructure.Security;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,11 +26,19 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IPasswordHashService, BCryptPasswordHashService>();
 
+builder.Services.AddDbContext<AuthDbContext>(opts =>
+    opts.UseNpgsql(builder.Configuration.GetConnectionString("AuthDb")));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<AuthDbContext>();
+        db.Database.Migrate();
+    }
     app.UseSwagger();
     app.UseSwaggerUI();
 }

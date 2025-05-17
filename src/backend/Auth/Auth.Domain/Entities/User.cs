@@ -10,7 +10,7 @@
 
         public string PasswordHash { get; private set; }
 
-        public ICollection<Role> Roles { get; private set; }
+        public ICollection<Role> Roles { get; private set; } = new List<Role>();
 
         private User() { }
 
@@ -20,7 +20,6 @@
             Username = userName;
             Email = email;
             PasswordHash = password;
-            Roles = new List<Role>();
         }
 
         public void AddRole(Role role) => Roles.Add(role);

@@ -1,5 +1,6 @@
 using Auth.Application.Interfaces;
 using Auth.Application.RequestModels;
+using Auth.Application.ResponseModels;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Auth.API.Controllers;
@@ -23,9 +24,11 @@ public class AuthController : ControllerBase
         return Ok(id);
     }
 
-    [HttpPost("register")]
-    public async Task<IActionResult> Login(LoginRequestModel dto, CancellationToken ct)
+    [HttpPost("login")]
+    public async Task<ActionResult<AuthResponse>> Login(LoginRequestModel dto, CancellationToken ct)
     {
-        return Ok();
+        var response = await authService.LoginAsync(dto, ct);
+
+        return Ok(response);
     }
 }

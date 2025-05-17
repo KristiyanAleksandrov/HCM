@@ -9,5 +9,7 @@ namespace Auth.Infrastructure.Repositories
         Task SaveChangesAsync(CancellationToken ct);
 
         Task<bool> ExistsAsync(string userName, CancellationToken ct);
+
+        Task<User?> GetByUserNameAsync(string username, CancellationToken ct);
     }
 }

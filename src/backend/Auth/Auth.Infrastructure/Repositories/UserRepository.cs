@@ -27,5 +27,8 @@ namespace Auth.Infrastructure.Repositories
         {
             return await dbContext.Users.AsNoTracking().AnyAsync(u => u.Username == userName, ct);
         }
+
+        public async Task<User?> GetByUserNameAsync(string username, CancellationToken ct)
+        => await dbContext.Users.FirstOrDefaultAsync(u => u.Username == username, ct);
     }
 }
