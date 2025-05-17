@@ -14,13 +14,15 @@
 
         private User() { }
 
-        public User(string userName, string email, string password, IEnumerable<Role> roles)
+        public User(string userName, string email, string password)
         {
             Id = Guid.NewGuid();
             Username = userName;
             Email = email;
             PasswordHash = password;
-            Roles = roles.ToList();
+            Roles = new List<Role>();
         }
+
+        public void AddRole(Role role) => Roles.Add(role);
     }
 }
