@@ -32,6 +32,7 @@ namespace Auth.Application.Services
                 throw new ConflictException("Username already exists");
             }
 
+            //TODO: ADD automapper
             var user = new User(input.Username, input.Email, passwordHashService.Hash(input.Password));
             foreach (var roleName in input.Roles.Distinct())
                 user.AddRole(await rolesRepository.RequireByNameAsync(roleName, ct));
