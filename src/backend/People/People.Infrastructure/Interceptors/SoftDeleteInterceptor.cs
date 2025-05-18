@@ -35,3 +35,4 @@ namespace People.Infrastructure.Interceptors
             return base.SavingChangesAsync(eventData, result, cancellationToken);
         }
     }
+}

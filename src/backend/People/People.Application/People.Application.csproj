@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="ResponseModels\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\People.Domain\People.Domain.csproj" />
   </ItemGroup>
 

@@ -34,10 +34,14 @@ namespace People.Infrastructure.Repositories
            return await dbContext.People.FirstOrDefaultAsync(x => x.Id == id, ct);
         }
 
-        public Task DeleteAsync(Person p, CancellationToken ct)
+        public async Task<IEnumerable<Person>> GetAllAsync(CancellationToken ct)
+        {
+            return await dbContext.People.ToListAsync(ct);
+        }
+
+        public void Delete(Person p)
         {
             dbContext.People.Remove(p);
-            return Task.CompletedTask;
         }
     }
 }

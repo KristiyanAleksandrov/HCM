@@ -17,17 +17,17 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> Register(RegisterRequestModel dto, CancellationToken ct)
+    public async Task<IActionResult> Register(RegisterRequestModel req, CancellationToken ct)
     {
-        var id = await authService.RegisterAsync(dto, ct);
+        var id = await authService.RegisterAsync(req, ct);
 
         return Ok(id);
     }
 
     [HttpPost("login")]
-    public async Task<ActionResult<AuthResponse>> Login(LoginRequestModel dto, CancellationToken ct)
+    public async Task<ActionResult<AuthResponse>> Login(LoginRequestModel req, CancellationToken ct)
     {
-        var response = await authService.LoginAsync(dto, ct);
+        var response = await authService.LoginAsync(req, ct);
 
         return Ok(response);
     }

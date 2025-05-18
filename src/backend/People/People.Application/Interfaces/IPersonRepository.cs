@@ -10,8 +10,10 @@ namespace People.Application.Interfaces
 
         void Update(Person person);
 
-        Task DeleteAsync(Person person, CancellationToken ct);
+        void Delete(Person person);
 
         Task<Person?> GetAsync(Guid id, CancellationToken ct);
+
+        Task<IEnumerable<Person>> GetAllAsync(CancellationToken ct);
     }
 }

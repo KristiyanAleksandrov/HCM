@@ -1,11 +1,12 @@
 ﻿using People.Application.Errors;
 using People.Application.Interfaces;
 using People.Application.RequestModels;
+using People.Application.ResponseModels;
 using People.Domain.Entities;
 
 namespace People.Application.Services
 {
-    public class PersonService
+    public class PersonService : IPersonService
     {
         private readonly IPersonRepository personRepository;
 
@@ -46,6 +47,50 @@ namespace People.Application.Services
 
             personRepository.Update(person);
             await personRepository.SaveChangesAsync(ct);
+        }
+
+        public async Task DeleteAsync(Guid id, CancellationToken ct)
+        {
+            var person = await personRepository.GetAsync(id, ct);
+
+            if (person == null)
+            {
+                throw new NotFoundException("Person not found");
+            }
+
+            personRepository.Delete(person);
+            await personRepository.SaveChangesAsync(ct);
+        }
+
+        public async Task<IEnumerable<PersonResponse>> GetAllAsync(CancellationToken ct)
+        {
+            var people = await personRepository.GetAllAsync(ct);
+
+            return people.Select(MapToResponse);
+        }
+
+        public async Task<PersonResponse?> GetByIdAsync(Guid id, CancellationToken ct)
+        {
+            var person = await personRepository.GetAsync(id, ct);
+
+            if (person == null)
+            {
+                throw new NotFoundException("Person not found");
+            }
+
+            return MapToResponse(person);
+        }
+
+        private PersonResponse MapToResponse(Person p)
+        {
+            return new PersonResponse
+            {
+                Id = p.Id,
+                FirstName = p.FirstName,
+                LastName = p.LastName,
+                Email = p.Email,
+                Position = p.Position
+            };
         }
     }
 }

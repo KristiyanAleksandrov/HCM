@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using People.API.Infrastructure.ErrorHandling;
 using People.Application.Interfaces;
+using People.Application.Services;
 using People.Infrastructure.Data;
 using People.Infrastructure.Interceptors;
 using People.Infrastructure.Repositories;
@@ -20,6 +21,8 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
+builder.Services.AddScoped<IPersonService, PersonService>();
+builder.Services.AddSingleton<SoftDeleteInterceptor>();
 
 builder.Services.AddDbContext<PeopleDbContext>((sp, opts) =>
     opts.UseNpgsql(builder.Configuration.GetConnectionString("PeopleDb"))
