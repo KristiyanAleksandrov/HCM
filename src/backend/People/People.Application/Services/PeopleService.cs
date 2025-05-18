@@ -6,11 +6,11 @@ using People.Domain.Entities;
 
 namespace People.Application.Services
 {
-    public class PersonService : IPersonService
+    public class PeopleService : IPeopleService
     {
-        private readonly IPersonRepository personRepository;
+        private readonly IPeopleRepository personRepository;
 
-        public PersonService(IPersonRepository personRepository)
+        public PeopleService(IPeopleRepository personRepository)
         {
             this.personRepository = personRepository;
         }

@@ -2,7 +2,7 @@
 
 namespace People.Application.Interfaces
 {
-    public interface IPersonRepository
+    public interface IPeopleRepository
     {
         Task SaveChangesAsync(CancellationToken ct);
 

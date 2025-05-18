@@ -5,11 +5,11 @@ using People.Infrastructure.Data;
 
 namespace People.Infrastructure.Repositories
 {
-    public class PersonRepository : IPersonRepository
+    public class PeopleRepository : IPeopleRepository
     {
         private readonly PeopleDbContext dbContext;
 
-        public PersonRepository(PeopleDbContext dbContext)
+        public PeopleRepository(PeopleDbContext dbContext)
         {
             this.dbContext = dbContext;
         }

@@ -3,7 +3,7 @@ using People.Application.ResponseModels;
 
 namespace People.Application.Interfaces
 {
-    public interface IPersonService
+    public interface IPeopleService
     {
         Task<Guid> AddAsync(CreatePersonRequest req, CancellationToken ct);
         Task UpdateAsync(Guid id, UpdatePersonRequest req, CancellationToken ct);
