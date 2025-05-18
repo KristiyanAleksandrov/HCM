@@ -59,6 +59,17 @@ services:
     volumes:
       - vault-data:/vault/file
 
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "5173:80"
+    depends_on:
+      - authapi
+      - peopleapi
+    networks: [hcm-net]
+
+
 networks:
   hcm-net:
 

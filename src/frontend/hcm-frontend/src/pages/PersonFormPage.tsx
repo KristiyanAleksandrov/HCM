@@ -7,7 +7,7 @@ import {
   Button,
   Box
 } from '@mui/material'
-import api from '../api/axios'
+import api from '../apis/peopleApi'
 
 export default function PersonFormPage() {
   const { id } = useParams()

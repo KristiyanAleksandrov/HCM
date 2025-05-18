@@ -25,22 +25,35 @@ builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
 builder.Services.AddScoped<IPeopleService, PeopleService>();
 builder.Services.AddSingleton<SoftDeleteInterceptor>();
 
+var myAllowSpecificOrigins = "myAllowSpecificOrigins";
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: myAllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("http://localhost:5173")
+                  .AllowAnyHeader()
+                  .AllowAnyMethod();
+        });
+});
+
+
 var vault = new VaultService();
 
 ////get secrets from Vault
-//var dbSecrets = await vault.GetSecretAsync("hcm/db");
-//builder.Configuration["ConnectionStrings:PeopleDb"] = dbSecrets["PeopleDb"]?.ToString();
+var dbSecrets = await vault.GetSecretAsync("hcm/db");
+builder.Configuration["ConnectionStrings:PeopleDb"] = dbSecrets["PeopleDb"]?.ToString();
 
 builder.Services.AddDbContext<PeopleDbContext>((sp, opts) =>
     opts.UseNpgsql(builder.Configuration.GetConnectionString("PeopleDb"))
     .AddInterceptors(sp.GetRequiredService<SoftDeleteInterceptor>()));
 
 //get secrets from Vault
-//var jwtSecrets = await vault.GetSecretAsync("hcm/jwt");
-//builder.Configuration["Jwt:Secret"] = jwtSecrets["Secret"]?.ToString();
-//builder.Configuration["Jwt:Issuer"] = jwtSecrets["Issuer"]?.ToString();
-//builder.Configuration["Jwt:Audience"] = jwtSecrets["Audience"]?.ToString();
-//builder.Configuration["Jwt:ExpiryMinutes"] = jwtSecrets["ExpiryMinutes"]?.ToString();
+var jwtSecrets = await vault.GetSecretAsync("hcm/jwt");
+builder.Configuration["Jwt:Secret"] = jwtSecrets["Secret"]?.ToString();
+builder.Configuration["Jwt:Issuer"] = jwtSecrets["Issuer"]?.ToString();
+builder.Configuration["Jwt:Audience"] = jwtSecrets["Audience"]?.ToString();
+builder.Configuration["Jwt:ExpiryMinutes"] = jwtSecrets["ExpiryMinutes"]?.ToString();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var secretKey = jwtSettings["Secret"];
@@ -71,6 +84,8 @@ builder.Services.AddAuthorization();
 //TODO: Make shared projects for the repeated code.
 
 var app = builder.Build();
+
+app.UseCors(myAllowSpecificOrigins);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

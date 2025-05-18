@@ -11,7 +11,7 @@ import {
   Button,
   Box
 } from '@mui/material'
-import api from '../api/axios'
+import api from '../apis/peopleApi'
 import type { Person } from '../types'
 import { useAuth } from '../contexts/AuthContext'
 

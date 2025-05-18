@@ -11,7 +11,7 @@ import {
   FormControlLabel,
   Checkbox
 } from '@mui/material'
-import api from '../api/axios'
+import api from '../apis/authApi'
 
 const availableRoles = ['Employee', 'Manager', 'HR Admin']
 

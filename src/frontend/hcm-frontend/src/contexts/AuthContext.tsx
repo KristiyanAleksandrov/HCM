@@ -1,7 +1,7 @@
 import { createContext, useContext, useState  } from 'react'
 import type { ReactNode } from 'react'
 import { jwtDecode } from 'jwt-decode'
-import api from '../api/axios'
+import api from '../apis/authApi'
 
 interface AuthContextValue {
   token: string | null
