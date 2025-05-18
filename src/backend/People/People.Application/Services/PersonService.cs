@@ -1,4 +1,5 @@
-﻿using People.Application.Interfaces;
+﻿using People.Application.Errors;
+using People.Application.Interfaces;
 using People.Application.RequestModels;
 using People.Domain.Entities;
 
@@ -26,10 +27,9 @@ namespace People.Application.Services
         {
             var person = await personRepository.GetAsync(id, ct);
 
-            //TODO: add exceptions
-             if (person == null)
+            if (person == null)
             {
-                throw new Exception("Person not found");
+                throw new NotFoundException("Person not found");
             }
 
             if (!string.IsNullOrWhiteSpace(req.FirstName))

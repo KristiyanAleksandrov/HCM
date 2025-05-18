@@ -9,5 +9,10 @@ namespace People.Infrastructure.Data
 
         public PeopleDbContext(DbContextOptions<PeopleDbContext> opts)
         : base(opts) { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Person>().HasQueryFilter(x => x.IsDeleted == false);
+        }
     }
 }

@@ -25,16 +25,16 @@ namespace Auth.Application.Services
             this.jwtTokenGenerator = jwtTokenGenerator;
         }
 
-        public async Task<Guid> RegisterAsync(RegisterRequestModel input, CancellationToken ct)
+        public async Task<Guid> RegisterAsync(RegisterRequestModel req, CancellationToken ct)
         {
-            if (await usersRepository.ExistsAsync(input.Username, ct))
+            if (await usersRepository.ExistsAsync(req.Username, ct))
             {
                 throw new ConflictException("Username already exists");
             }
 
             //TODO: ADD automapper
-            var user = new User(input.Username, input.Email, passwordHashService.Hash(input.Password));
-            foreach (var roleName in input.Roles.Distinct())
+            var user = new User(req.Username, req.Email, passwordHashService.Hash(req.Password));
+            foreach (var roleName in req.Roles.Distinct())
                 user.AddRole(await rolesRepository.RequireByNameAsync(roleName, ct));
 
             await usersRepository.AddAsync(user, ct);
@@ -42,12 +42,12 @@ namespace Auth.Application.Services
             return user.Id;
         }
 
-        public async Task<AuthResponse> LoginAsync(LoginRequestModel dto, CancellationToken ct)
+        public async Task<AuthResponse> LoginAsync(LoginRequestModel req, CancellationToken ct)
         {
-            var user = await usersRepository.GetByUserNameAsync(dto.Username, ct)
+            var user = await usersRepository.GetByUserNameAsync(req.Username, ct)
                        ?? throw new UnauthorizedException();
 
-            if (!passwordHashService.Verify(dto.Password, user.PasswordHash))
+            if (!passwordHashService.Verify(req.Password, user.PasswordHash))
                 throw new UnauthorizedException();
 
             return jwtTokenGenerator.Generate(user);
