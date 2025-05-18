@@ -1,7 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using People.Application.Interfaces;
 using People.Application.RequestModels;
+using People.Application.ResponseModels;
 
 namespace People.API.Controllers
 {
@@ -41,6 +41,18 @@ namespace People.API.Controllers
         public async Task Delete(Guid id, CancellationToken ct)
         {
             await personService.DeleteAsync(id, ct);
+        }
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<PersonResponse>> Get(Guid id, CancellationToken ct)
+        {
+            return Ok(await personService.GetByIdAsync(id, ct));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<PersonResponse>>> GetAll(CancellationToken ct)
+        {
+            return Ok(await personService.GetAllAsync(ct));
         }
     }
 }

@@ -1,4 +1,5 @@
 using Auth.API.Infrastructure.ErrorHandling;
+using Auth.API.Infrastructure.Vault;
 using Auth.Application.Interfaces;
 using Auth.Application.Services;
 using Auth.Infrastructure.Data;
@@ -11,10 +12,8 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
@@ -29,8 +28,21 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IPasswordHashService, BCryptPasswordHashService>();
 
+var vault = new VaultService();
+
+//get secrets from Vault
+var dbSecrets = await vault.GetSecretAsync("hcm/db");
+builder.Configuration["ConnectionStrings:AuthDb"] = dbSecrets["AuthDb"]?.ToString();
+
 builder.Services.AddDbContext<AuthDbContext>(opts =>
     opts.UseNpgsql(builder.Configuration.GetConnectionString("AuthDb")));
+
+//get secrets from Vault
+var jwtSecrets = await vault.GetSecretAsync("hcm/jwt");
+builder.Configuration["Jwt:Secret"] = jwtSecrets["Secret"]?.ToString();
+builder.Configuration["Jwt:Issuer"] = jwtSecrets["Issuer"]?.ToString();
+builder.Configuration["Jwt:Audience"] = jwtSecrets["Audience"]?.ToString();
+builder.Configuration["Jwt:ExpiryMinutes"] = jwtSecrets["ExpiryMinutes"]?.ToString();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var secretKey = jwtSettings["Secret"];
@@ -60,7 +72,6 @@ builder.Services.AddAuthorization();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     using (var scope = app.Services.CreateScope())

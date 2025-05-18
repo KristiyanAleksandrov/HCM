@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using People.API.Infrastructure.ErrorHandling;
+using People.API.Infrastructure.Vault;
 using People.Application.Interfaces;
 using People.Application.Services;
 using People.Infrastructure.Data;
@@ -24,9 +25,22 @@ builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 builder.Services.AddScoped<IPersonService, PersonService>();
 builder.Services.AddSingleton<SoftDeleteInterceptor>();
 
+var vault = new VaultService();
+
+//get secrets from Vault
+var dbSecrets = await vault.GetSecretAsync("hcm/db");
+builder.Configuration["ConnectionStrings:PeopleDb"] = dbSecrets["PeopleDb"]?.ToString();
+
 builder.Services.AddDbContext<PeopleDbContext>((sp, opts) =>
     opts.UseNpgsql(builder.Configuration.GetConnectionString("PeopleDb"))
     .AddInterceptors(sp.GetRequiredService<SoftDeleteInterceptor>()));
+
+//get secrets from Vault
+var jwtSecrets = await vault.GetSecretAsync("hcm/jwt");
+builder.Configuration["Jwt:Secret"] = jwtSecrets["Secret"]?.ToString();
+builder.Configuration["Jwt:Issuer"] = jwtSecrets["Issuer"]?.ToString();
+builder.Configuration["Jwt:Audience"] = jwtSecrets["Audience"]?.ToString();
+builder.Configuration["Jwt:ExpiryMinutes"] = jwtSecrets["ExpiryMinutes"]?.ToString();
 
 var jwtSettings = builder.Configuration.GetSection("Jwt");
 var secretKey = jwtSettings["Secret"];
