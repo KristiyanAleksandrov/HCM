@@ -1,6 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using People.API.Infrastructure.ErrorHandling;
 using People.Application.Interfaces;
+using People.Infrastructure.Data;
 using People.Infrastructure.Repositories;
 using System.Text;
 
@@ -12,6 +15,8 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
 
 builder.Services.AddScoped<IPersonRepository, PersonRepository>();
 
@@ -48,6 +53,11 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    using (var scope = app.Services.CreateScope())
+    {
+        var db = scope.ServiceProvider.GetRequiredService<PeopleDbContext>();
+        db.Database.Migrate();
+    }
     app.UseSwagger();
     app.UseSwaggerUI();
 }
