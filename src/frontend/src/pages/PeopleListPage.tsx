@@ -20,8 +20,13 @@ export default function PeopleListPage() {
   const { role } = useAuth()
 
   useEffect(() => {
-    api.get('/people').then((res) => setPeople(res.data))
+    fetchPeople();
   }, [])
+
+  const fetchPeople = async () => {
+    const res = await api.get('/people')
+    setPeople(res.data)
+  }
 
   const canEdit = role === 'HR Admin' || role === 'Manager'
 
@@ -29,7 +34,7 @@ export default function PeopleListPage() {
     <Container maxWidth="md">
       <Box sx={{ my: 4 }}>
         <Typography variant="h4" gutterBottom>
-          People
+          People Records
         </Typography>
         {canEdit && (
           <Button variant="contained" component={RouterLink} to="/people/new">
@@ -52,6 +57,7 @@ export default function PeopleListPage() {
                 <TableCell>{p.firstName}</TableCell>
                 <TableCell>{p.lastName}</TableCell>
                 <TableCell>{p.email}</TableCell>
+                <TableCell>{p.position}</TableCell>
                 {canEdit && (
                   <TableCell>
                     <Button component={RouterLink} to={`/people/${p.id}`} size="small">
