@@ -42,6 +42,7 @@ export default function PeopleListPage() {
               <TableCell>First Name</TableCell>
               <TableCell>Last Name</TableCell>
               <TableCell>Email</TableCell>
+              <TableCell>Position</TableCell>
               {canEdit && <TableCell />}
             </TableRow>
           </TableHead>

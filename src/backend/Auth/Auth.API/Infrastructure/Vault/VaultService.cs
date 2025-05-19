@@ -5,7 +5,7 @@ namespace Auth.API.Infrastructure.Vault
 {
     public class VaultService
     {
-        private readonly IVaultClient _client;
+        private readonly IVaultClient client;
 
         public VaultService()
         {
@@ -15,12 +15,12 @@ namespace Auth.API.Infrastructure.Vault
 
             var authMethod = new TokenAuthMethodInfo(token);
             var settings = new VaultClientSettings(vaultUri, authMethod);
-            _client = new VaultClient(settings);
+            client = new VaultClient(settings);
         }
 
         public async Task<IDictionary<string, object>> GetSecretAsync(string path)
         {
-            var result = await _client.V1.Secrets.KeyValue.V2.ReadSecretAsync(path, null, "secret");
+            var result = await client.V1.Secrets.KeyValue.V2.ReadSecretAsync(path, null, "secret");
 
             return result.Data.Data;
         }
