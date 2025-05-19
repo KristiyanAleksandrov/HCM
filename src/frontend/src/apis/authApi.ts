@@ -1,9 +1,7 @@
 import axios from 'axios'
 
 const authApi = axios.create({
-  baseURL: import.meta.env.DEV
-    ? 'http://localhost:5001'
-    : 'http://authapi:5000'
+  baseURL: 'http://localhost:5001'
 })
 
 authApi.interceptors.request.use((config) => {

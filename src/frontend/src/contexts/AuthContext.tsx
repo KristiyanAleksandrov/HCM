@@ -29,8 +29,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
     token ? (jwtDecode(token) as any).role : null
   )
 
-  const login = async (email: string, password: string) => {
-    const { data } = await api.post('/auth/login', { email, password })
+  const login = async (username: string, password: string) => {
+    const { data } = await api.post('/auth/login', { username, password })
     localStorage.setItem('token', data.token)
     setToken(data.token)
     setRole((jwtDecode(data.token) as any).role)

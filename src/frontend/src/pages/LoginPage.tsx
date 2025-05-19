@@ -6,7 +6,7 @@ import { useAuth } from '../contexts/AuthContext'
 
 export default function LoginPage() {
   const { login } = useAuth()
-  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const navigate = useNavigate()
   const [error, setError] = useState('')
@@ -14,7 +14,7 @@ export default function LoginPage() {
   const handleSubmit = async (e: any) => {
     e.preventDefault()
     try {
-      await login(email, password)
+      await login(username, password)
       navigate('/')
     } catch {
       setError('Invalid credentials')
@@ -29,11 +29,11 @@ export default function LoginPage() {
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
-            label="Email"
+            label="Username"
             fullWidth
             margin="normal"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
           />
           <TextField
             label="Password"
