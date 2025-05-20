@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { Link } from 'react-router-dom'
 import { Button, TextField, Container, Typography, Box } from '@mui/material'
 import { useAuth } from '../contexts/AuthContext'
+import { useNotification } from '../contexts/NotificationContext'
 
 export default function LoginPage() {
   const { login } = useAuth()
@@ -11,10 +12,13 @@ export default function LoginPage() {
   const navigate = useNavigate()
   const [error, setError] = useState('')
 
+  const { showMessage } = useNotification()
+
   const handleSubmit = async (e: any) => {
     e.preventDefault()
     try {
       await login(username, password)
+      showMessage('Successful login', 'success')
       navigate('/')
     } catch {
       setError('Invalid credentials')

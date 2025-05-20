@@ -17,7 +17,7 @@ function PrivateRoute({ children}: PrivateRouteProps) {
 }
 
 export default function App() {
-  const { token, logout } = useAuth()
+  const { token, user, logout } = useAuth()
   const navigate = useNavigate()
 
   const handleLogout = () => {
@@ -30,9 +30,9 @@ export default function App() {
     {token && (
         <AppBar position="static" color="primary">
           <Toolbar sx={{ justifyContent: 'space-between' }}>
-            <Typography variant="h6">HCM App</Typography>
+            <Typography onClick={() => navigate('/')} variant="h6" sx={{ cursor: 'pointer' }}>HCM App</Typography>
             <Box display="flex" alignItems="center" gap={4}>
-              <Typography>Testt</Typography>
+              <Typography>{user}</Typography>
               <Button color="inherit" onClick={handleLogout}>
                 Logout
               </Button>
@@ -61,7 +61,7 @@ export default function App() {
             }
           />
           <Route
-            path="/people/new"
+            path="/people/add"
             element={
               <PrivateRoute>
                 <PersonFormPage />

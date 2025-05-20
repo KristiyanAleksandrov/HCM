@@ -8,6 +8,7 @@ import {
   Box
 } from '@mui/material'
 import api from '../apis/peopleApi'
+import { useNotification } from '../contexts/NotificationContext'
 
 export default function PersonFormPage() {
   const { id } = useParams()
@@ -16,8 +17,11 @@ export default function PersonFormPage() {
   const [form, setForm] = useState({
     firstName: '',
     lastName: '',
-    email: ''
+    email: '',
+    position: ''
   })
+
+  const { showMessage } = useNotification();
 
   useEffect(() => {
     if (editing) {
@@ -36,6 +40,7 @@ export default function PersonFormPage() {
     } else {
       await api.post('/people', form)
     }
+    showMessage('Successfully edited record', 'success');
     navigate('/')
   }
 
@@ -69,6 +74,15 @@ export default function PersonFormPage() {
             fullWidth
             margin="normal"
             value={form.email}
+            onChange={handleChange}
+          />
+          <TextField
+            label="Position"
+            name="position"
+            type="position"
+            fullWidth
+            margin="normal"
+            value={form.position}
             onChange={handleChange}
           />
           <Button variant="contained" type="submit" sx={{ mt: 2 }}>

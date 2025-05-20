@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
+import { useEffect, useState } from "react";
+import { Link as RouterLink } from "react-router-dom";
 import {
   Container,
   Typography,
@@ -9,26 +9,33 @@ import {
   TableCell,
   TableBody,
   Button,
-  Box
-} from '@mui/material'
-import api from '../apis/peopleApi'
-import type { Person } from '../types'
-import { useAuth } from '../contexts/AuthContext'
+  Box,
+  Stack,
+} from "@mui/material";
+import api from "../apis/peopleApi";
+import type { Person } from "../types";
+import { useAuth } from "../contexts/AuthContext";
 
 export default function PeopleListPage() {
-  const [people, setPeople] = useState<Person[]>([])
-  const { role } = useAuth()
+  const [people, setPeople] = useState<Person[]>([]);
+  const { role } = useAuth();
+
+  const canEditAndDelete = role === "HRAdmin" || role === "Manager";
 
   useEffect(() => {
     fetchPeople();
-  }, [])
+  }, []);
 
   const fetchPeople = async () => {
-    const res = await api.get('/people')
-    setPeople(res.data)
-  }
+    const res = await api.get("/people");
+    setPeople(res.data);
+  };
 
-  const canEdit = role === 'HR Admin' || role === 'Manager'
+  const handleDelete = async (id: string) => {
+    if (!window.confirm("Are you sure you want to delete this person?")) return;
+    await api.delete(`/people?id=${id}`);
+    fetchPeople();
+  };
 
   return (
     <Container maxWidth="md">
@@ -36,19 +43,24 @@ export default function PeopleListPage() {
         <Typography variant="h4" gutterBottom>
           People Records
         </Typography>
-        {canEdit && (
-          <Button variant="contained" component={RouterLink} to="/people/new">
+        {canEditAndDelete && (
+          <Button
+            variant="contained"
+            component={RouterLink}
+            to="/people/add"
+            sx={{ mb: 2 }}
+          >
             Add Person
           </Button>
         )}
-        <Table sx={{ mt: 2 }}>
+        <Table>
           <TableHead>
             <TableRow>
               <TableCell>First Name</TableCell>
               <TableCell>Last Name</TableCell>
               <TableCell>Email</TableCell>
               <TableCell>Position</TableCell>
-              {canEdit && <TableCell />}
+              {canEditAndDelete && <TableCell align="right">Actions</TableCell>}
             </TableRow>
           </TableHead>
           <TableBody>
@@ -58,11 +70,30 @@ export default function PeopleListPage() {
                 <TableCell>{p.lastName}</TableCell>
                 <TableCell>{p.email}</TableCell>
                 <TableCell>{p.position}</TableCell>
-                {canEdit && (
-                  <TableCell>
-                    <Button component={RouterLink} to={`/people/${p.id}`} size="small">
-                      Edit
-                    </Button>
+                {canEditAndDelete && (
+                  <TableCell align="right">
+                    <Stack
+                      direction="row"
+                      spacing={1}
+                      justifyContent="flex-end"
+                    >
+                      <Button
+                        variant="outlined"
+                        size="small"
+                        component={RouterLink}
+                        to={`/people/${p.id}`}
+                      >
+                        Edit
+                      </Button>
+                      <Button
+                        variant="outlined"
+                        color="error"
+                        size="small"
+                        onClick={() => handleDelete(p.id)}
+                      >
+                        Delete
+                      </Button>
+                    </Stack>
                   </TableCell>
                 )}
               </TableRow>
@@ -71,5 +102,5 @@ export default function PeopleListPage() {
         </Table>
       </Box>
     </Container>
-  )
+  );
 }

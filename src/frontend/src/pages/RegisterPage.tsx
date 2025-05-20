@@ -13,7 +13,7 @@ import {
 } from '@mui/material'
 import api from '../apis/authApi'
 
-const availableRoles = ['Employee', 'Manager', 'HR Admin']
+const availableRoles = ['Employee', 'Manager', 'HRAdmin']
 
 export default function RegisterPage() {
   const navigate = useNavigate()
