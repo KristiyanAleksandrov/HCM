@@ -27,6 +27,21 @@ namespace Auth.Application.Services
 
         public async Task<Guid> RegisterAsync(RegisterRequestModel req, CancellationToken ct)
         {
+            if (string.IsNullOrWhiteSpace(req.Username))
+            {
+                throw new BadRequestException("First name is required.");
+            }
+
+            if (string.IsNullOrWhiteSpace(req.Password))
+            {
+                throw new BadRequestException("Password is required.");
+            }
+
+            if (string.IsNullOrWhiteSpace(req.Email))
+            {
+                throw new BadRequestException("Email is required.");
+            }
+
             if (await usersRepository.ExistsAsync(req.Username, ct))
             {
                 throw new ConflictException("Username already exists");
@@ -43,6 +58,16 @@ namespace Auth.Application.Services
 
         public async Task<AuthResponse> LoginAsync(LoginRequestModel req, CancellationToken ct)
         {
+            if (string.IsNullOrWhiteSpace(req.Username))
+            {
+                throw new BadRequestException("First name is required.");
+            }
+
+            if (string.IsNullOrWhiteSpace(req.Password))
+            {
+                throw new BadRequestException("Password is required.");
+            }
+
             var user = await usersRepository.GetByUserNameAsync(req.Username, ct)
                        ?? throw new UnauthorizedException();
 

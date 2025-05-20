@@ -3,6 +3,7 @@ using People.Application.Interfaces;
 using People.Application.RequestModels;
 using People.Application.ResponseModels;
 using People.Domain.Entities;
+using System.Net;
 
 namespace People.Application.Services
 {
@@ -17,6 +18,18 @@ namespace People.Application.Services
 
         public async Task<Guid> AddAsync(CreatePersonRequest req, CancellationToken ct)
         {
+            if (string.IsNullOrWhiteSpace(req.FirstName))
+                throw new BadRequestException("First name is required.");
+
+            if (string.IsNullOrWhiteSpace(req.LastName))
+                throw new BadRequestException("Last name is required.");
+
+            if (string.IsNullOrWhiteSpace(req.Email))
+                throw new BadRequestException("Email is required.");
+
+            if (string.IsNullOrWhiteSpace(req.Position))
+                throw new BadRequestException("Position is required.");
+
             if (await personRepository.ExistsAsync(req.Email, ct))
             {
                 throw new ConflictException("Person with this email already exists");
@@ -83,7 +96,7 @@ namespace People.Application.Services
             return people.Select(MapToResponse);
         }
 
-        public async Task<PersonResponse?> GetByIdAsync(Guid id, CancellationToken ct)
+        public async Task<PersonResponse> GetByIdAsync(Guid id, CancellationToken ct)
         {
             var person = await personRepository.GetAsync(id, ct);
 

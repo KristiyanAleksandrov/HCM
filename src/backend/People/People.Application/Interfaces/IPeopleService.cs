@@ -9,6 +9,6 @@ namespace People.Application.Interfaces
         Task UpdateAsync(Guid id, UpdatePersonRequest req, CancellationToken ct);
         Task DeleteAsync(Guid id, CancellationToken ct);
         Task<IEnumerable<PersonResponse>> GetAllAsync(CancellationToken ct);
-        Task<PersonResponse?> GetByIdAsync(Guid id, CancellationToken ct);
+        Task<PersonResponse> GetByIdAsync(Guid id, CancellationToken ct);
     }
 }
