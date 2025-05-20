@@ -15,5 +15,7 @@ namespace People.Application.Interfaces
         Task<Person?> GetAsync(Guid id, CancellationToken ct);
 
         Task<IEnumerable<Person>> GetAllAsync(CancellationToken ct);
+
+        Task<bool> ExistsAsync(string email, CancellationToken ct);
     }
 }

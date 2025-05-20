@@ -17,6 +17,11 @@ namespace People.Application.Services
 
         public async Task<Guid> AddAsync(CreatePersonRequest req, CancellationToken ct)
         {
+            if (await personRepository.ExistsAsync(req.Email, ct))
+            {
+                throw new ConflictException("Person with this email already exists");
+            }
+
             var person = new Person(req.FirstName, req.LastName, req.Email, req.Position);
 
             await personRepository.AddAsync(person, ct);
@@ -43,7 +48,16 @@ namespace People.Application.Services
                 person.Position = req.Position;
 
             if (!string.IsNullOrWhiteSpace(req.Email))
+            {
+                if (person.Email != req.Email)
+                {
+                    if (await personRepository.ExistsAsync(req.Email, ct))
+                    {
+                        throw new ConflictException("Person with this email already exists");
+                    }
+                }
                 person.Email = req.Email;
+            }
 
             personRepository.Update(person);
             await personRepository.SaveChangesAsync(ct);

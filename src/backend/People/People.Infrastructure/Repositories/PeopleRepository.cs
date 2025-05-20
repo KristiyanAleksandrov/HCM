@@ -39,6 +39,11 @@ namespace People.Infrastructure.Repositories
             return await dbContext.People.ToListAsync(ct);
         }
 
+        public async Task<bool> ExistsAsync(string email, CancellationToken ct)
+        {
+            return await dbContext.People.AsNoTracking().AnyAsync(u => u.Email == email, ct);
+        }
+
         public void Delete(Person p)
         {
             dbContext.People.Remove(p);

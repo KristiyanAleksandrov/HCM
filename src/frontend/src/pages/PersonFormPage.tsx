@@ -1,26 +1,19 @@
-import { useNavigate, useParams } from 'react-router-dom'
-import { useEffect, useState } from 'react'
-import {
-  Container,
-  Typography,
-  TextField,
-  Button,
-  Box
-} from '@mui/material'
-import api from '../apis/peopleApi'
-import { useNotification } from '../contexts/NotificationContext'
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Container, Typography, TextField, Button, Box } from "@mui/material";
+import api from "../apis/peopleApi";
+import { useNotification } from "../contexts/NotificationContext";
 
 export default function PersonFormPage() {
-  const { id } = useParams()
-  const navigate = useNavigate()
-  const editing = !!id
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const editing = !!id;
   const [form, setForm] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    position: ''
-  })
-
+    firstName: "",
+    lastName: "",
+    email: "",
+    position: "",
+  });
   const { showMessage } = useNotification();
 
   useEffect(() => {
@@ -37,25 +30,31 @@ export default function PersonFormPage() {
   }, [id]);
 
   const handleChange = (e: any) => {
-    setForm({ ...form, [e.target.name]: e.target.value })
-  }
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e: any) => {
-    e.preventDefault()
-    if (editing) {
-      await api.put(`/people?id=${id}`, form)
-    } else {
-      await api.post('/people', form)
+    e.preventDefault();
+    try {
+      if (editing) {
+        await api.put(`/people?id=${id}`, form);
+        showMessage("Successfully edited person", "success");
+      } else {
+        await api.post("/people", form);
+        showMessage("Successfully added person", "success");
+      }
+      navigate("/");
+    } catch (error) {
+      showMessage("Something went wrong. Please try again.", "error");
+      console.log(error);
     }
-    showMessage('Successfully edited record', 'success');
-    navigate('/')
-  }
+  };
 
   return (
     <Container maxWidth="sm">
       <Box sx={{ my: 4 }}>
         <Typography variant="h4" gutterBottom>
-          {editing ? 'Edit Person' : 'Add Person'}
+          {editing ? "Edit Person" : "Add Person"}
         </Typography>
         <form onSubmit={handleSubmit}>
           <TextField
@@ -98,5 +97,5 @@ export default function PersonFormPage() {
         </form>
       </Box>
     </Container>
-  )
+  );
 }

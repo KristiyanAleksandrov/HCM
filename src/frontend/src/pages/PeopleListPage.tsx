@@ -15,10 +15,12 @@ import {
 import api from "../apis/peopleApi";
 import type { Person } from "../types";
 import { useAuth } from "../contexts/AuthContext";
+import { useNotification } from "../contexts/NotificationContext";
 
 export default function PeopleListPage() {
   const [people, setPeople] = useState<Person[]>([]);
   const { role } = useAuth();
+  const { showMessage } = useNotification();
 
   const canEditAndDelete = role === "HRAdmin" || role === "Manager";
 
@@ -34,6 +36,7 @@ export default function PeopleListPage() {
   const handleDelete = async (id: string) => {
     if (!window.confirm("Are you sure you want to delete this person?")) return;
     await api.delete(`/people?id=${id}`);
+    showMessage("Successfully deleted record", "success");
     fetchPeople();
   };
 

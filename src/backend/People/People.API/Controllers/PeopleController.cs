@@ -18,8 +18,15 @@ namespace People.API.Controllers
             this.personService = personService;
         }
 
+        [HttpGet]
+        [Authorize]
+        public void Test()
+        {
+            throw new InvalidOperationException("This should trigger 500");
+        }
+
         [HttpPost]
-        //[Authorize(Roles = RoleNames.HRAdmin)]
+        [Authorize(Roles = $"{RoleNames.HRAdmin},{RoleNames.Manager}")]
         public async Task<IActionResult> Add(CreatePersonRequest req, CancellationToken ct)
         {
             var id = await personService.AddAsync(req, ct);
@@ -28,21 +35,21 @@ namespace People.API.Controllers
         }
 
         [HttpPut]
-        //[Authorize(Roles = $"{RoleNames.HRAdmin},{RoleNames.Manager}")]
+        [Authorize(Roles = $"{RoleNames.HRAdmin},{RoleNames.Manager}")]
         public async Task Update(Guid id, UpdatePersonRequest req, CancellationToken ct)
         {
             await personService.UpdateAsync(id, req, ct);
         }
 
         [HttpDelete]
-        //[Authorize(Roles = RoleNames.HRAdmin)]
+        [Authorize(Roles = $"{RoleNames.HRAdmin},{RoleNames.Manager}")]
         public async Task Delete(Guid id, CancellationToken ct)
         {
             await personService.DeleteAsync(id, ct);
         }
 
         [HttpGet("{id}")]
-        //[Authorize(Roles = $"{RoleNames.HRAdmin},{RoleNames.Manager},{RoleNames.Employee}")]
+        [Authorize]
         public async Task<ActionResult<PersonResponse>> Get(Guid id, CancellationToken ct)
         {
             var person = await personService.GetByIdAsync(id, ct);
@@ -51,7 +58,7 @@ namespace People.API.Controllers
         }
 
         [HttpGet]
-        //[Authorize(Roles = $"{RoleNames.HRAdmin},{RoleNames.Manager}")]
+        [Authorize]
         public async Task<ActionResult<IEnumerable<PersonResponse>>> GetAll(CancellationToken ct)
         {
             return Ok(await personService.GetAllAsync(ct));
