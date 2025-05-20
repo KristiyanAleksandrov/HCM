@@ -21,6 +21,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "People.Domain", "People\Peo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "People.Tests", "People\People.Tests\People.Tests.csproj", "{8E06C47A-2EE7-4CD7-9D1F-ABB65905A028}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Auth.Tests", "Auth\Auth.Tests\Auth.Tests.csproj", "{F2B03C0B-86E4-41C7-BBBA-7DBEA8F2DE75}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,10 @@ Global
 		{8E06C47A-2EE7-4CD7-9D1F-ABB65905A028}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E06C47A-2EE7-4CD7-9D1F-ABB65905A028}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E06C47A-2EE7-4CD7-9D1F-ABB65905A028}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F2B03C0B-86E4-41C7-BBBA-7DBEA8F2DE75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F2B03C0B-86E4-41C7-BBBA-7DBEA8F2DE75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F2B03C0B-86E4-41C7-BBBA-7DBEA8F2DE75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F2B03C0B-86E4-41C7-BBBA-7DBEA8F2DE75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

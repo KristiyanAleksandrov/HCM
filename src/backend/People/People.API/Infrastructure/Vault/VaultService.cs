@@ -1,9 +1,10 @@
-﻿using VaultSharp;
+﻿using People.Application.Interfaces;
+using VaultSharp;
 using VaultSharp.V1.AuthMethods.Token;
 
 namespace People.API.Infrastructure.Vault
 {
-    public class VaultService
+    public class VaultService : IVaultService
     {
         private readonly IVaultClient client;
 
