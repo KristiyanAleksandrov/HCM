@@ -2,7 +2,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Container, Typography, TextField, Button, Box } from "@mui/material";
 import api from "../apis/peopleApi";
-import { useNotification } from "../contexts/NotificationContext";
+import { notify } from "../utils/notify";
 
 export default function PersonFormPage() {
   const { id } = useParams();
@@ -14,7 +14,6 @@ export default function PersonFormPage() {
     email: "",
     position: "",
   });
-  const { showMessage } = useNotification();
 
   useEffect(() => {
     if (editing) {
@@ -35,19 +34,14 @@ export default function PersonFormPage() {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    try {
-      if (editing) {
-        await api.put(`/people?id=${id}`, form);
-        showMessage("Successfully edited person", "success");
-      } else {
-        await api.post("/people", form);
-        showMessage("Successfully added person", "success");
-      }
-      navigate("/");
-    } catch (error) {
-      showMessage("Something went wrong. Please try again.", "error");
-      console.log(error);
+    if (editing) {
+      await api.put(`/people?id=${id}`, form);
+      notify("Successfully edited person", "success");
+    } else {
+      await api.post("/people", form);
+      notify("Successfully added person", "success");
     }
+    navigate("/");
   };
 
   return (

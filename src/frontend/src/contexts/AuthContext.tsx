@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import type { ReactNode } from "react";
 import { jwtDecode } from "jwt-decode";
 import api from "../apis/authApi";
@@ -74,11 +74,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
     setUser(null);
   };
 
+  useEffect(() => {
+  setGlobalLogout(logout)
+  }, [logout])
+
   return (
     <AuthContext.Provider value={{ token, login, user, logout, role }}>
       {children}
     </AuthContext.Provider>
   );
+}
+
+let globalLogout: () => void = () => {}
+
+export function setGlobalLogout(fn: () => void) {
+  globalLogout = fn
+}
+
+export function getGlobalLogout() {
+  console.log('[getGlobalLogout] Called')
+  return globalLogout
 }
 
 export const useAuth = () => useContext(AuthContext);

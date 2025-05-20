@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, type ReactNode } from 'react'
 import { Snackbar, Alert, type AlertColor, Slide, type SlideProps } from '@mui/material'
+import { setNotifyImpl } from '../utils/notify'
 
 interface NotificationContextValue {
   showMessage: (message: string, severity?: AlertColor) => void
@@ -23,6 +24,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     setSeverity(type)
     setOpen(true)
   }
+  setNotifyImpl(showMessage);
 
   const handleClose = () => setOpen(false)
 

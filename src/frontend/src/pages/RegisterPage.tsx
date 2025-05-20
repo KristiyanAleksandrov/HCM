@@ -12,6 +12,7 @@ import {
   Checkbox
 } from '@mui/material'
 import api from '../apis/authApi'
+import { notify } from '../utils/notify'
 
 const availableRoles = ['Employee', 'Manager', 'HRAdmin']
 
@@ -42,6 +43,7 @@ export default function RegisterPage() {
     e.preventDefault()
     try {
       await api.post('/auth/register', form)
+      notify('Successful registration', 'success')
       navigate('/login')
     } catch {
       setError('Registration failed')

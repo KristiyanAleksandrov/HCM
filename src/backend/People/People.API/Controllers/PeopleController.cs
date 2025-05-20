@@ -18,7 +18,7 @@ namespace People.API.Controllers
             this.personService = personService;
         }
 
-        [HttpGet]
+        [HttpGet("test")]
         [Authorize]
         public void Test()
         {
