@@ -25,9 +25,16 @@ export default function PersonFormPage() {
 
   useEffect(() => {
     if (editing) {
-      api.get(`/people/${id}`).then((res) => setForm(res.data))
+      setForm({
+        firstName: "",
+        lastName: "",
+        email: "",
+        position: "",
+      });
+
+      api.get(`/people/${id}`).then((res) => setForm(res.data));
     }
-  }, [id])
+  }, [id]);
 
   const handleChange = (e: any) => {
     setForm({ ...form, [e.target.name]: e.target.value })
