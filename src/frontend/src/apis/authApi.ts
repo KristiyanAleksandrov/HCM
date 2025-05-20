@@ -28,7 +28,7 @@ authApi.interceptors.response.use(
       const errorMessage = detail || title || 'Unexpected error occurred.'
       notify(errorMessage, 'error')
     } else {
-      notify('Network error. Please try again later.', 'error')
+      notify('Unexpected error occurred.', 'error')
     }
     return Promise.reject(error)
   }
