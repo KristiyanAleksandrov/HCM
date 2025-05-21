@@ -27,8 +27,11 @@ builder.Services.AddScoped<IPeopleRepository, PeopleRepository>();
 builder.Services.AddScoped<IPeopleService, PeopleService>();
 builder.Services.AddSingleton<SoftDeleteInterceptor>();
 
-builder.Services.AddVault();
-builder.Services.AddPeopleDb(builder.Configuration);
+if (!builder.Environment.IsEnvironment("IntegrationTests"))
+{
+    builder.Services.AddVault();
+    builder.Services.AddPeopleDb(builder.Configuration);
+}
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer();

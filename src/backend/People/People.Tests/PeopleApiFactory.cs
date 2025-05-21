@@ -4,10 +4,8 @@ using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Microsoft.VisualStudio.TestPlatform.TestHost;
 using People.Infrastructure.Data;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
@@ -18,15 +16,10 @@ namespace People.Tests
     {
         protected override void ConfigureWebHost(IWebHostBuilder builder)
         {
-            builder.UseEnvironment("IntegrationTest");
+            builder.UseEnvironment("IntegrationTests");
 
             builder.ConfigureTestServices(services =>
             {
-                services.RemoveAll<IVaultService>();
-                services.AddSingleton<IVaultService, MockVaultService>();
-
-                services.RemoveAll<DbContextOptions<PeopleDbContext>>();
-                services.RemoveAll(typeof(IConfigureOptions<DbContextOptions<PeopleDbContext>>));
                 services.AddDbContext<PeopleDbContext>(o =>
                     o.UseInMemoryDatabase("PeopleTestDb"));
 
