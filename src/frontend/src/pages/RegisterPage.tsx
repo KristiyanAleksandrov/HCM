@@ -116,8 +116,16 @@ export default function RegisterPage() {
           <Button type="submit" variant="contained" fullWidth sx={{ mt: 2 }}>
             Register
           </Button>
+          <Button
+            variant="text"
+            fullWidth
+            sx={{ mt: 1 }}
+            onClick={() => navigate("/login")}
+          >
+            Already have an account? Login
+          </Button>
         </form>
       </Box>
     </Container>
-  )
+  );
 }
