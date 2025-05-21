@@ -7,14 +7,9 @@ namespace People.API.Infrastructure.Vault
     public class VaultService : IVaultService
     {
         private readonly IVaultClient client;
-
-        public VaultService()
+        public VaultService(string vaultUri, string vaultToken)
         {
-            //Not good for production
-            var vaultUri = "http://vault:8200";
-            var token = "root";
-
-            var authMethod = new TokenAuthMethodInfo(token);
+            var authMethod = new TokenAuthMethodInfo(vaultToken);
             var settings = new VaultClientSettings(vaultUri, authMethod);
             client = new VaultClient(settings);
         }

@@ -97,3 +97,4 @@ export function getGlobalLogout() {
 }
 
 export const useAuth = () => useContext(AuthContext);
+export { AuthContext };
