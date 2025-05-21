@@ -49,7 +49,9 @@ namespace Auth.Application.Services
 
             var user = new User(req.Username, req.Email, passwordHashService.Hash(req.Password));
             foreach (var roleName in req.Roles.Distinct())
+            {
                 user.AddRole(await rolesRepository.RequireByNameAsync(roleName, ct));
+            }
 
             await usersRepository.AddAsync(user, ct);
             await usersRepository.SaveChangesAsync(ct);
@@ -72,7 +74,9 @@ namespace Auth.Application.Services
                        ?? throw new UnauthorizedException();
 
             if (!passwordHashService.Verify(req.Password, user.PasswordHash))
+            {
                 throw new UnauthorizedException();
+            }
 
             return jwtTokenGenerator.Generate(user);
         }

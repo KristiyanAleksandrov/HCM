@@ -13,11 +13,9 @@ namespace People.Tests
     public class PeopleApiTests : IClassFixture<PeopleApiFactory>
     {
         private readonly HttpClient client;
-        private readonly PeopleApiFactory factory;
 
         public PeopleApiTests(PeopleApiFactory factory)
         {
-            this.factory = factory;
             client = factory.CreateClient();
 
             using var scope = factory.Services.CreateScope();

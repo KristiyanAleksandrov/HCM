@@ -59,23 +59,4 @@ namespace People.Tests
             return Task.FromResult(AuthenticateResult.Success(ticket));
         }
     }
-
-    public interface IVaultService
-    {
-        Task<Dictionary<string, object>> GetSecretAsync(string path);
-    }
-
-    public class MockVaultService : IVaultService
-    {
-        public Task<Dictionary<string, object>> GetSecretAsync(string path)
-        {
-            return Task.FromResult(new Dictionary<string, object>
-        {
-            { "Secret", "testsecrettestsecrettestsecrettestsecret" },
-            { "Issuer", "testissuer" },
-            { "Audience", "testaudience" },
-            { "ExpiryMinutes", "60" }
-        });
-        }
-    }
 }

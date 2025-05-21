@@ -93,8 +93,7 @@ if (app.Environment.IsDevelopment())
     using (var scope = app.Services.CreateScope())
     {
         var db = scope.ServiceProvider.GetRequiredService<PeopleDbContext>();
-        if (!db.Database.ProviderName!.Contains("InMemory"))
-            db.Database.Migrate();
+        db.Database.Migrate();
     }
     app.UseSwagger();
     app.UseSwaggerUI();
