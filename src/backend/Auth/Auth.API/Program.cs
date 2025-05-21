@@ -41,45 +41,50 @@ builder.Services.AddCors(options =>
         });
 });
 
-var vault = new VaultService();
-
-//get secrets from Vault
-var dbSecrets = await vault.GetSecretAsync("hcm/db");
-builder.Configuration["ConnectionStrings:AuthDb"] = dbSecrets["AuthDb"]?.ToString();
-
-builder.Services.AddDbContext<AuthDbContext>(opts =>
-    opts.UseNpgsql(builder.Configuration.GetConnectionString("AuthDb")));
-
-//get secrets from Vault
-var jwtSecrets = await vault.GetSecretAsync("hcm/jwt");
-builder.Configuration["Jwt:Secret"] = jwtSecrets["Secret"]?.ToString();
-builder.Configuration["Jwt:Issuer"] = jwtSecrets["Issuer"]?.ToString();
-builder.Configuration["Jwt:Audience"] = jwtSecrets["Audience"]?.ToString();
-builder.Configuration["Jwt:ExpiryMinutes"] = jwtSecrets["ExpiryMinutes"]?.ToString();
-
-var jwtSettings = builder.Configuration.GetSection("Jwt");
-var secretKey = jwtSettings["Secret"];
-var issuer = jwtSettings["Issuer"];
-var audience = jwtSettings["Audience"];
-
-builder.Services.AddAuthentication(options =>
+if (!builder.Environment.IsEnvironment("IntegrationTests"))
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-})
-.AddJwtBearer(options =>
-{
-    options.TokenValidationParameters = new TokenValidationParameters
+    var vaultUri = builder.Configuration["Vault:Uri"];
+    var vaultToken = builder.Configuration["Vault:Token"];
+    var vault = new VaultSecretProvider(vaultUri, vaultToken);
+
+    //get secrets from Vault
+    var dbSecrets = await vault.GetSecretAsync("hcm/db");
+    builder.Configuration["ConnectionStrings:AuthDb"] = dbSecrets["AuthDb"]?.ToString();
+
+    builder.Services.AddDbContext<AuthDbContext>(opts =>
+        opts.UseNpgsql(builder.Configuration.GetConnectionString("AuthDb")));
+
+    //get secrets from Vault
+    var jwtSecrets = await vault.GetSecretAsync("hcm/jwt");
+    builder.Configuration["Jwt:Secret"] = jwtSecrets["Secret"]?.ToString();
+    builder.Configuration["Jwt:Issuer"] = jwtSecrets["Issuer"]?.ToString();
+    builder.Configuration["Jwt:Audience"] = jwtSecrets["Audience"]?.ToString();
+    builder.Configuration["Jwt:ExpiryMinutes"] = jwtSecrets["ExpiryMinutes"]?.ToString();
+
+    var jwtSettings = builder.Configuration.GetSection("Jwt");
+    var secretKey = jwtSettings["Secret"];
+    var issuer = jwtSettings["Issuer"];
+    var audience = jwtSettings["Audience"];
+
+    builder.Services.AddAuthentication(options =>
     {
-        ValidateIssuer = true,
-        ValidateAudience = true,
-        ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
-        ValidIssuer = issuer,
-        ValidAudience = audience,
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
-    };
-});
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = issuer,
+            ValidAudience = audience,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secretKey))
+        };
+    });
+}
 
 builder.Services.AddAuthorization();
 

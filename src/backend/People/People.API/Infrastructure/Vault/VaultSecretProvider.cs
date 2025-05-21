@@ -4,10 +4,10 @@ using VaultSharp.V1.AuthMethods.Token;
 
 namespace People.API.Infrastructure.Vault
 {
-    public class VaultService : IVaultService
+    public class VaultSecretProvider
     {
         private readonly IVaultClient client;
-        public VaultService(string vaultUri, string vaultToken)
+        public VaultSecretProvider(string vaultUri, string vaultToken)
         {
             var authMethod = new TokenAuthMethodInfo(vaultToken);
             var settings = new VaultClientSettings(vaultUri, authMethod);

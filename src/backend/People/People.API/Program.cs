@@ -42,7 +42,7 @@ if (!builder.Environment.IsEnvironment("IntegrationTests"))
 {
     var vaultUri = builder.Configuration["Vault:Uri"];
     var vaultToken = builder.Configuration["Vault:Token"];
-    var vault = new VaultService(vaultUri, vaultToken);
+    var vault = new VaultSecretProvider(vaultUri, vaultToken);
 
     var dbSecrets = await vault.GetSecretAsync("hcm/db");
     builder.Configuration["ConnectionStrings:PeopleDb"] = dbSecrets["PeopleDb"]?.ToString();

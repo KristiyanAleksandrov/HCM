@@ -3,17 +3,14 @@ using VaultSharp.V1.AuthMethods.Token;
 
 namespace Auth.API.Infrastructure.Vault
 {
-    public class VaultService
+    public class VaultSecretProvider
     {
         private readonly IVaultClient client;
 
-        public VaultService()
+        //TODO: Think how to extract common things
+        public VaultSecretProvider(string vaultUri, string vaultToken)
         {
-            //Not good for production
-            var vaultUri = "http://vault:8200";
-            var token = "root";
-
-            var authMethod = new TokenAuthMethodInfo(token);
+            var authMethod = new TokenAuthMethodInfo(vaultToken);
             var settings = new VaultClientSettings(vaultUri, authMethod);
             client = new VaultClient(settings);
         }
