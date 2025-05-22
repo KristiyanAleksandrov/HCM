@@ -32,14 +32,29 @@ namespace Auth.Application.Services
                 throw new BadRequestException("First name is required.");
             }
 
+            if (req.Username.Length > 100)
+            {
+                throw new BadRequestException("Username must be under 100 characters.");
+            }
+
             if (string.IsNullOrWhiteSpace(req.Password))
             {
                 throw new BadRequestException("Password is required.");
             }
 
+            if (req.Password.Length > 100)
+            {
+                throw new BadRequestException("Password must be under 100 characters.");
+            }
+
             if (string.IsNullOrWhiteSpace(req.Email))
             {
                 throw new BadRequestException("Email is required.");
+            }
+
+            if (req.Email.Length > 255)
+            {
+                throw new BadRequestException("Email must be under 255 characters.");
             }
 
             if (await usersRepository.ExistsAsync(req.Username, ct))

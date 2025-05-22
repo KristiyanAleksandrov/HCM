@@ -19,6 +19,8 @@ namespace Auth.Infrastructure.Data
             b.Entity<User>(x =>
             {
                 x.HasIndex(u => u.Username).IsUnique();
+                x.Property(u => u.Username).HasMaxLength(100).IsRequired();
+                x.Property(u => u.Email).HasMaxLength(100).IsRequired();
             });
 
             b.Entity<Role>().HasData(

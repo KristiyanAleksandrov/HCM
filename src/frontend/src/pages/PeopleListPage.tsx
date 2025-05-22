@@ -55,53 +55,61 @@ export default function PeopleListPage() {
             Add Person
           </Button>
         )}
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>First Name</TableCell>
-              <TableCell>Last Name</TableCell>
-              <TableCell>Email</TableCell>
-              <TableCell>Position</TableCell>
-              {canEditAndDelete && <TableCell align="right">Actions</TableCell>}
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {people.map((p) => (
-              <TableRow key={p.id}>
-                <TableCell>{p.firstName}</TableCell>
-                <TableCell>{p.lastName}</TableCell>
-                <TableCell>{p.email}</TableCell>
-                <TableCell>{p.position}</TableCell>
+        {people.length > 0 ? (
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>First Name</TableCell>
+                <TableCell>Last Name</TableCell>
+                <TableCell>Email</TableCell>
+                <TableCell>Position</TableCell>
                 {canEditAndDelete && (
-                  <TableCell align="right">
-                    <Stack
-                      direction="row"
-                      spacing={1}
-                      justifyContent="flex-end"
-                    >
-                      <Button
-                        variant="outlined"
-                        size="small"
-                        component={RouterLink}
-                        to={`/people/${p.id}`}
-                      >
-                        Edit
-                      </Button>
-                      <Button
-                        variant="outlined"
-                        color="error"
-                        size="small"
-                        onClick={() => handleDelete(p.id)}
-                      >
-                        Delete
-                      </Button>
-                    </Stack>
-                  </TableCell>
+                  <TableCell align="right">Actions</TableCell>
                 )}
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHead>
+            <TableBody>
+              {people.map((p) => (
+                <TableRow key={p.id}>
+                  <TableCell>{p.firstName}</TableCell>
+                  <TableCell>{p.lastName}</TableCell>
+                  <TableCell>{p.email}</TableCell>
+                  <TableCell>{p.position}</TableCell>
+                  {canEditAndDelete && (
+                    <TableCell align="right">
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        justifyContent="flex-end"
+                      >
+                        <Button
+                          variant="outlined"
+                          size="small"
+                          component={RouterLink}
+                          to={`/people/${p.id}`}
+                        >
+                          Edit
+                        </Button>
+                        <Button
+                          variant="outlined"
+                          color="error"
+                          size="small"
+                          onClick={() => handleDelete(p.id)}
+                        >
+                          Delete
+                        </Button>
+                      </Stack>
+                    </TableCell>
+                  )}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        ) : (
+          <Typography variant="body1" sx={{ mt: 2 }}>
+            No records found.
+          </Typography>
+        )}
       </Box>
     </Container>
   );

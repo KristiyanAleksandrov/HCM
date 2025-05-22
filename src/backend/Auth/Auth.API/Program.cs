@@ -47,14 +47,12 @@ if (!builder.Environment.IsEnvironment("IntegrationTests"))
     var vaultToken = builder.Configuration["Vault:Token"];
     var vault = new VaultSecretProvider(vaultUri, vaultToken);
 
-    //get secrets from Vault
     var dbSecrets = await vault.GetSecretAsync("hcm/db");
     builder.Configuration["ConnectionStrings:AuthDb"] = dbSecrets["AuthDb"]?.ToString();
 
     builder.Services.AddDbContext<AuthDbContext>(opts =>
         opts.UseNpgsql(builder.Configuration.GetConnectionString("AuthDb")));
 
-    //get secrets from Vault
     var jwtSecrets = await vault.GetSecretAsync("hcm/jwt");
     builder.Configuration["Jwt:Secret"] = jwtSecrets["Secret"]?.ToString();
     builder.Configuration["Jwt:Issuer"] = jwtSecrets["Issuer"]?.ToString();

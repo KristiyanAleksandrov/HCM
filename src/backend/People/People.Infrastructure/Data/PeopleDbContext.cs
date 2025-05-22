@@ -12,6 +12,14 @@ namespace People.Infrastructure.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            modelBuilder.Entity<Person>(entity =>
+            {
+                entity.Property(e => e.FirstName).HasMaxLength(100).IsRequired();
+                entity.Property(e => e.LastName).HasMaxLength(100).IsRequired();
+                entity.Property(e => e.Email).HasMaxLength(255).IsRequired();
+                entity.Property(e => e.Position).HasMaxLength(100).IsRequired();
+            });
+
             modelBuilder.Entity<Person>().HasQueryFilter(x => x.IsDeleted == false);
         }
     }

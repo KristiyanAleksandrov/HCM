@@ -18,22 +18,7 @@ namespace People.Application.Services
 
         public async Task<Guid> AddAsync(CreatePersonRequest req, CancellationToken ct)
         {
-            if (string.IsNullOrWhiteSpace(req.FirstName))
-                throw new BadRequestException("First name is required.");
-
-            if (string.IsNullOrWhiteSpace(req.LastName))
-                throw new BadRequestException("Last name is required.");
-
-            if (string.IsNullOrWhiteSpace(req.Email))
-                throw new BadRequestException("Email is required.");
-
-            if (string.IsNullOrWhiteSpace(req.Position))
-                throw new BadRequestException("Position is required.");
-
-            if (await personRepository.ExistsAsync(req.Email, ct))
-            {
-                throw new ConflictException("Person with this email already exists");
-            }
+            await ValidatePersonInput(req.FirstName, req.LastName, req.Email, req.Position, ct);
 
             var person = new Person(req.FirstName, req.LastName, req.Email, req.Position);
 
@@ -52,24 +37,43 @@ namespace People.Application.Services
             }
 
             if (!string.IsNullOrWhiteSpace(req.FirstName))
+            {
+                if (req.FirstName.Length > 100)
+                    throw new BadRequestException("First name must be under 100 characters.");
+
                 person.FirstName = req.FirstName;
+            }
 
             if (!string.IsNullOrWhiteSpace(req.LastName))
+            {
+                if (req.LastName.Length > 100)
+                    throw new BadRequestException("Last name must be under 100 characters.");
+
                 person.LastName = req.LastName;
+            }
 
             if (!string.IsNullOrWhiteSpace(req.Position))
+            {
+                if (req.Position.Length > 100)
+                    throw new BadRequestException("Position must be under 100 characters.");
+
                 person.Position = req.Position;
+            }
 
             if (!string.IsNullOrWhiteSpace(req.Email))
             {
                 if (person.Email != req.Email)
                 {
+                    if (req.Email.Length > 255)
+                    {
+                        throw new BadRequestException("Email must be under 255 characters.");
+                    }
                     if (await personRepository.ExistsAsync(req.Email, ct))
                     {
                         throw new ConflictException("Person with this email already exists");
                     }
+                    person.Email = req.Email;
                 }
-                person.Email = req.Email;
             }
 
             personRepository.Update(person);
@@ -118,6 +122,38 @@ namespace People.Application.Services
                 Email = p.Email,
                 Position = p.Position
             };
+        }
+
+        private async Task ValidatePersonInput(string firstName, string lastName, string email, string position, CancellationToken ct)
+        {
+            if (string.IsNullOrWhiteSpace(firstName))
+                throw new BadRequestException("First name is required.");
+
+            if (firstName.Length > 100)
+                throw new BadRequestException("First name must be under 100 characters.");
+
+            if (string.IsNullOrWhiteSpace(lastName))
+                throw new BadRequestException("Last name is required.");
+
+            if (lastName.Length > 100)
+                throw new BadRequestException("Last name must be under 100 characters.");
+
+            if (string.IsNullOrWhiteSpace(email))
+                throw new BadRequestException("Email is required.");
+
+            if (email.Length > 255)
+                throw new BadRequestException("Email must be under 255 characters.");
+
+            if (string.IsNullOrWhiteSpace(position))
+                throw new BadRequestException("Position is required.");
+
+            if (position.Length > 100)
+                throw new BadRequestException("Position must be under 100 characters.");
+
+            if (await personRepository.ExistsAsync(email, ct))
+            {
+                throw new ConflictException("Person with this email already exists");
+            }
         }
     }
 }
